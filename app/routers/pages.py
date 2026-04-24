@@ -13,6 +13,8 @@ router = APIRouter(tags=["pages"])
 def health_check():
     return {"status": "ok"}
 
+
+@router.get("/")
 def index(request: Request):
     token = request.cookies.get("access_token")
     if token:
