@@ -5,7 +5,14 @@ from __future__ import annotations
 import os
 from datetime import datetime, timedelta
 
-from supabase import Client, create_client
+try:
+    from supabase import Client, create_client
+    _SUPABASE_AVAILABLE = True
+except ImportError:
+    _SUPABASE_AVAILABLE = False
+    Client = None
+    create_client = None
+
 
 from ..config import get_settings
 
