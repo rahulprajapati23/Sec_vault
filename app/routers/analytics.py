@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import HTMLResponse
 
 from ..database import get_db
 from ..services.analytics import get_dashboard_stats, get_user_activity_summary
@@ -8,15 +9,18 @@ from ..services.analytics import get_dashboard_stats, get_user_activity_summary
 router = APIRouter(prefix="/analytics", tags=["analytics"])
 
 
-@router.get("/dashboard")
+@router.get("/dashboard", response_class=HTMLResponse)
 def get_dashboard(request: Request):
     from ..main import require_admin_user
 
-    require_admin_user(request)
+    user = require_admin_user(request)
     with get_db() as conn:
         stats = get_dashboard_stats(conn)
 
-    return stats
+    return request.app.state.templates.TemplateResponse(
+        "analytics.html",
+        {"request": request, "stats": stats, "user": user},
+    )
 
 
 @router.get("/user/{user_id}")

@@ -14,7 +14,12 @@
 <section class="panel">
   <div class="panel-header">
     <h2>Your files</h2>
-    <a class="button secondary" href="/upload">Upload file</a>
+    <div style="display: flex; gap: 1rem;">
+      {% if user.role == 'ADMIN' %}
+        <a class="button" href="/analytics/dashboard">Security Dashboard</a>
+      {% endif %}
+      <a class="button secondary" href="/upload">Upload file</a>
+    </div>
   </div>
 
   {% if files %}
