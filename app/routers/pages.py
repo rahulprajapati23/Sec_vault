@@ -9,7 +9,10 @@ from ..services.files import list_files_for_user
 router = APIRouter(tags=["pages"])
 
 
-@router.get("/")
+@router.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 def index(request: Request):
     token = request.cookies.get("access_token")
     if token:
