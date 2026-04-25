@@ -62,6 +62,9 @@ class Settings:
     keycloak_admin_client_id: str
     keycloak_admin_client_secret: str
     virustotal_api_key: str
+    cors_allow_origins: tuple[str, ...]
+    cookie_secure: bool
+    cookie_samesite: str
 
 
 
@@ -160,4 +163,7 @@ def get_settings() -> Settings:
         keycloak_admin_client_id=os.getenv("KEYCLOAK_ADMIN_CLIENT_ID", "").strip(),
         keycloak_admin_client_secret=os.getenv("KEYCLOAK_ADMIN_CLIENT_SECRET", "").strip(),
         virustotal_api_key=os.getenv("VIRUSTOTAL_API_KEY", "").strip(),
+        cors_allow_origins=_parse_csv(os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")),
+        cookie_secure=_to_bool(os.getenv("COOKIE_SECURE", "false"), False),
+        cookie_samesite=os.getenv("COOKIE_SAMESITE", "lax").strip().lower(),
     )

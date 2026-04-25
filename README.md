@@ -61,6 +61,7 @@ uvicorn app.main:app --reload
 ## Production Deployment Artifacts
 - PostgreSQL schema: `deploy/postgres_schema.sql`
 - Keycloak + PostgreSQL compose stack: `deploy/docker-compose.keycloak.yml`
+- Free-tier hosted deployment guide: `docs/FREE_DEMO_DEPLOYMENT.md`
 
 ## Security Notes
 - Passwords are stored only as bcrypt hashes.

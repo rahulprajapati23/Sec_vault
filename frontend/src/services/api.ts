@@ -1,9 +1,11 @@
 import axios from 'axios';
 
-// Empty baseURL = requests go through Vite proxy on same origin
-// This is critical for cookies to be sent with cross-origin API calls
+// Empty baseURL keeps local Vite proxy behavior.
+// Set VITE_API_URL in hosted environments (for example, Vercel -> Render).
+const apiBaseUrl = import.meta.env.VITE_API_URL?.trim() || '';
+
 export const api = axios.create({
-  baseURL: '',
+  baseURL: apiBaseUrl,
   withCredentials: true,
 });
 

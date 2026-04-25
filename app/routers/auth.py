@@ -27,6 +27,13 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 logger = get_logger()
 
 
+def _cookie_samesite() -> str:
+    value = get_settings().cookie_samesite
+    if value in {"lax", "strict", "none"}:
+        return value
+    return "lax"
+
+
 @router.post("/api-login")
 def api_login(request: Request, email: str = Form(...), password: str = Form(...)):
     """JSON-compatible login endpoint for the React SPA.
@@ -65,7 +72,14 @@ def api_login(request: Request, email: str = Form(...), password: str = Form(...
     record_event(event_type="auth", severity="low", action="login", status="success", message="User logged in via API", actor_user_id=user["id"], actor_email=user["email"], request=request)
 
     response = JSONResponse(content={"id": user["id"], "email": user["email"], "role": user["role"]})
-    response.set_cookie("access_token", token, httponly=True, samesite="lax", secure=False, max_age=60 * 60 * 24)
+    response.set_cookie(
+        "access_token",
+        token,
+        httponly=True,
+        samesite=_cookie_samesite(),
+        secure=get_settings().cookie_secure,
+        max_age=60 * 60 * 24,
+    )
     return response
 
 
@@ -249,7 +263,14 @@ def login(request: Request, email: str = Form(...), password: str = Form(...)):
     )
     token = create_access_token(str(user["id"]))
     response = RedirectResponse(url="/dashboard", status_code=status.HTTP_303_SEE_OTHER)
-    response.set_cookie("access_token", token, httponly=True, samesite="lax", secure=False, max_age=60 * 60 * 24)
+    response.set_cookie(
+        "access_token",
+        token,
+        httponly=True,
+        samesite=_cookie_samesite(),
+        secure=get_settings().cookie_secure,
+        max_age=60 * 60 * 24,
+    )
     return response
 
 

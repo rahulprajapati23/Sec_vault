@@ -100,10 +100,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Secure File Storage System", lifespan=lifespan)
 
-# Allow React Frontend
+# Allow frontend origins from environment (supports local dev and hosted SPA)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=list(settings.cors_allow_origins),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
